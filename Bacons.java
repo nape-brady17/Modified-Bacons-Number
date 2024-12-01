@@ -69,21 +69,68 @@ public class Bacons{
 
             return randVertex;
         }
+
+        private int calculateBaconNumber(int start, int end){
+            if (start == end) return 0; //If they are the same the bacon number is 0
+
+            //Doing network.size will not work for this
+            Queue<Integer> q = new LinkedList<>();
+            int[] baconNums = new int[network.size() + 1];
+            Arrays.fill(baconNums, -1);
+            boolean[] visited = new boolean[network.size() + 1];
+
+            //initialization for BFS
+            q.offer(start);
+            baconNums[start] = 0;
+            visited[start] = true;
+
+            while (!q.isEmpty()){
+                int cur = q.poll();
+                int curBaconNum = baconNums[cur];
+
+                Vertex v = network.get(cur);
+                for (int i : v.getEdges()){
+                    if (!visited[i]){   //if the edge has not been visited
+                        visited[i] = true;
+                        baconNums[i] = curBaconNum + 1;
+                        if (i == end) return baconNums[i];  //if you made it to the end return the bacon number
+                        q.offer(i);
+                    }
+                }
+            }
+            return -1;  //there was no path from start to end
+        }
+
+        private double calculateAverageBaconNumber(int randVertex){
+            int totalBacon = 0, numVertices = 0;
+
+            //calculate the bacon number to every reachable vertex
+            //average all the bacon numbers together
+            for (Vertex v : network){
+                int to = v.getVertexNum();
+                int baconNum = calculateBaconNumber(randVertex, to);
+                if (baconNum != -1){
+                    totalBacon += baconNum;
+                    numVertices++;
+                }
+            }
+
+            return (double) totalBacon / numVertices;
+        }
     
         public static void main(String[] args) {
-            //Things to do:
-                //call method to randomly select vertex
-                //call method to calculate the average bacon number from the randomly selected vertex
-                //call method to read user selected vertex
-                //call method to calculate the bacon number from this vertex
-                //call method to see if the user wishes to continue
-                    //if yes go back to step 4, use a do while loop with a boolean to see if they want to continue
-                    //if no continue below to the next step
-                //call method to output a file containing necessary information
-                //call method to thank the user
-    
             b.readInput(args);  //reads all input and creates the network
             int randVertex = b.selectRandomVertex();    //selects a valid random vertex
+            double averageBaconNum = b.calculateAverageBaconNumber(randVertex);   //calculates the average bacon number from the randomly selected vertex to all others in the network
+
+            //call method to calculate the average bacon number from the randomly selected vertex 
+            //call method to read user selected vertex
+            //call method to calculate the bacon number from this vertex (make sure the vertex exists first)
+            //call method to see if the user wishes to continue
+                //if yes go back to step 4, use a do while loop with a boolean to see if they want to continue
+                //if no continue below to the next step
+            //call method to output a file containing necessary information
+            //call method to thank the user
 
      
     
@@ -98,5 +145,6 @@ public class Bacons{
             }
 
             System.out.println("\n" + randVertex);
+            System.out.println(averageBaconNum);
     }
 }
