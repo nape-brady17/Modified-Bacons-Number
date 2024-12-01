@@ -21,7 +21,7 @@ public class Bacons{
     private static Bacons b = new Bacons();
     private static ArrayList<Vertex> network = new ArrayList<>();
     
-        //may want to speed this method up somehow, searching takes FOREVER
+        //want to speed this method up somehow, searching takes FOREVER
         private int has(int from){
             for (Vertex v : network){
                 if (v.getVertexNum() == from) return network.indexOf(v);
@@ -56,18 +56,16 @@ public class Bacons{
                 System.out.println("An error occurred please restart the program.");
                 System.exit(0);
             }
+
+            System.out.println("reads input correctly");
     
             return network;
         }
     
         private int selectRandomVertex(){
             Random random = new Random();
-            int randVertex;
-            do{ randVertex =  random.nextInt((network.size() - 0) + 1);
-                System.out.println(randVertex);
-            } while (has(randVertex) == -1);
-
-            return randVertex;
+            int randIndex = random.nextInt(network.size());
+            return network.get(randIndex).getVertexNum();
         }
 
         private int calculateBaconNumber(int start, int end){
@@ -99,37 +97,47 @@ public class Bacons{
                 }
             }
             return -1;  //there was no path from start to end
-        }
+        }        
 
         private double calculateAverageBaconNumber(int randVertex){
             int totalBacon = 0, numVertices = 0;
 
-            //calculate the bacon number to every reachable vertex
-            //average all the bacon numbers together
-            for (Vertex v : network){
+            for (Vertex v : network){   //for all vertices
                 int to = v.getVertexNum();
-                int baconNum = calculateBaconNumber(randVertex, to);
+                int baconNum = calculateBaconNumber(randVertex, to);    //calculate the bacon number to that vertex
                 if (baconNum != -1){
-                    totalBacon += baconNum;
-                    numVertices++;
+                    totalBacon += baconNum; //add it to the total
+                    numVertices++;  //add one to the number of vertices
                 }
             }
 
-            return (double) totalBacon / numVertices;
+            return (double) totalBacon / numVertices;   //return the average bacon number
         }
-    
-        public static void main(String[] args) {
-            b.readInput(args);  //reads all input and creates the network
-            int randVertex = b.selectRandomVertex();    //selects a valid random vertex
-            double averageBaconNum = b.calculateAverageBaconNumber(randVertex);   //calculates the average bacon number from the randomly selected vertex to all others in the network
 
-            //call method to calculate the average bacon number from the randomly selected vertex 
-            //call method to read user selected vertex
-            //call method to calculate the bacon number from this vertex (make sure the vertex exists first)
-            //call method to see if the user wishes to continue
-                //if yes go back to step 4, use a do while loop with a boolean to see if they want to continue
-                //if no continue below to the next step
-            //call method to output a file containing necessary information
+        public static void main(String[] args) {
+            //create a file to output at the end 
+
+            b.readInput(args);  //reads all input and creates the network
+
+            int randVertex = b.selectRandomVertex();    //selects a random vertex from the network
+
+            double averageBaconNum = b.calculateAverageBaconNumber(randVertex);   //calculates the average bacon number from the randomly selected vertex to all others in the network
+                //should work after calculateBaconNumber works, needs to be updated to run BFS correctly
+
+            //add the random vertex and the average bacon number to the file created above
+
+            boolean cont = true;
+            do{
+                //get vertex from the user, ensure the vertex exists in the network
+                //calculate the bacon number and likelihood of collaboration
+                //add the user vertex, bacon number, and likelihood of collaboration to the file
+                    //also display it to the user
+                //ask the user if they want to continue, update cont if needed
+                cont = false;
+            } while (cont);
+
+
+            //call method to output the file containing all necessary information
             //call method to thank the user
 
      
