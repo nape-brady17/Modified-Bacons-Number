@@ -1,6 +1,5 @@
 import java.util.*;
 import java.io.*;
-import java.math.*;
 
 class Vertex{
     private int vertexNum;
@@ -20,76 +19,84 @@ class Vertex{
 
 public class Bacons{
     private static Bacons b = new Bacons();
-
-    private int has(ArrayList<Vertex> network, int from){
-        for (Vertex v : network){
-            if (v.getVertexNum() == from) return network.indexOf(v);
+    private static ArrayList<Vertex> network = new ArrayList<>();
+    
+        //may want to speed this method up somehow, searching takes FOREVER
+        private int has(int from){
+            for (Vertex v : network){
+                if (v.getVertexNum() == from) return network.indexOf(v);
+            }
+            return -1;
         }
-        return -1;
-    }
-
-    private ArrayList<Vertex> readInput(String[] args){
-        ArrayList<Vertex> network = new ArrayList<>();
-
-        //for each vertex read in check if its already in graph
-        //if it is do graph.find(vertex) to give that vertex then add the new edge
-        //if it is not create a new vertex and add it to the arraylist
-        try{
-            File file = new File(args[0]);
-            Scanner in = new Scanner(file);
-            long numLines = -1;
-            int from, to, at;
-
-            try(LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(file))) {
-                lineNumberReader.skip(Long.MAX_VALUE);
-                numLines = lineNumberReader.getLineNumber();
-            }
-
-            for (int i = 0; i < 4; i++){
-                in.nextLine();
-            }
-            
-            for (long i = 0; i < numLines - 4; i++){
-                from = in.nextInt();
-                to = in.nextInt();
-                at = b.has(network, from);
-                if (at != -1){ //the vertex is in the network already at vertex at
-                    network.get(at).addEdge(to);
-                }else{
-                    Vertex v = new Vertex(from, to);
-                    network.add(v);
+    
+        private ArrayList<Vertex> readInput(String[] args){
+            try{    //read the file and create the network
+                File file = new File(args[0]);
+                BufferedReader in = new BufferedReader(new FileReader(file));
+                String line;
+                int from, to, at;
+    
+                while ((line = in.readLine()) != null){ //while not at the end of the file
+                    if (line.trim().startsWith("#")) continue;  //if the line does not start with '#'
+    
+                    String[] parts = line.split("\\s+");    //split the line
+                    from = Integer.parseInt(parts[0]);  //get the from vertex
+                    to = Integer.parseInt(parts[1]);    //get the to vertex
+                    at = b.has(from);  //check if from is in the network already
+                    if (at != -1){ //the vertex is in the network already at vertex at
+                        network.get(at).addEdge(to);    //if it is then add the edge
+                    }else{  //if its not then create a new vertex
+                        Vertex v = new Vertex(from, to);
+                        network.add(v);
+                    }
                 }
+                in.close();
+            } catch(Exception e){  //any unexpected error
+                System.out.println(e);
+                System.out.println("An error occurred please restart the program.");
+                System.exit(0);
             }
-            in.close();
-        } catch(Exception e){  //any other unexpected error
-            System.out.println(e);
-            System.out.println("An error occurred please restart the program.");
-            System.exit(0);
+    
+            return network;
         }
+    
+        private int selectRandomVertex(){
+            Random random = new Random();
+            int randVertex;
+            do{ randVertex =  random.nextInt((network.size() - 0) + 1);
+                System.out.println(randVertex);
+            } while (has(randVertex) == -1);
 
-        return network;
-    }
+            return randVertex;
+        }
+    
+        public static void main(String[] args) {
+            //Things to do:
+                //call method to randomly select vertex
+                //call method to calculate the average bacon number from the randomly selected vertex
+                //call method to read user selected vertex
+                //call method to calculate the bacon number from this vertex
+                //call method to see if the user wishes to continue
+                    //if yes go back to step 4, use a do while loop with a boolean to see if they want to continue
+                    //if no continue below to the next step
+                //call method to output a file containing necessary information
+                //call method to thank the user
+    
+            b.readInput(args);  //reads all input and creates the network
+            int randVertex = b.selectRandomVertex();    //selects a valid random vertex
 
-    public static void main(String[] args) {
-        //call method to read all input and create the graph
-        //call method to randomly select vertex
-        //call method to calculate the average bacon number from the randomly selected vertex
-        //call method to read user selected vertex
-        //call method to calculate the bacon number from this vertex
-        //call method to see if the user wishes to continue
-            //if yes go back to step 4, use a do while loop with a boolean to see if they want to continue
-            //if no continue below to the next step
-        //call method to output a file containing necessary information
-        //call method to thank the user
-
-        ArrayList<Vertex> network = b.readInput(args);
-
-        for (Vertex v : network){
+     
+    
+    
+            //Below this is used for ensuring input is read in correctly
+            for (Vertex v : network){
             System.out.print(v.getVertexNum() + ": ");
             for (Integer i : v.getEdges()){
                 System.out.print(i + ", ");
             }
-            System.out.println();
-        }
+                System.out.println();
+            }
+
+            System.out.println("\n" + randVertex);
     }
 }
