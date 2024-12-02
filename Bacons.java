@@ -73,6 +73,7 @@ public class Bacons{
 
         private int calculateBaconNumber(int start, int end){
             //do I need to reset all bacon numbers in the vertices each time?
+                //still not working properly
 
             if (start == end) return 0; //If they are the same the bacon number is 0
 
