@@ -3,6 +3,7 @@ import java.io.*;
 
 class Vertex{
     private int vertexNum;
+    private int baconNum;
     private ArrayList<Integer> edges;
 
     public Vertex(){};
@@ -10,9 +11,12 @@ class Vertex{
         this.vertexNum = vertexNum;
         edges = new ArrayList<>();
         edges.add(edge);
+        baconNum = 0;
     }
     public void addEdge(int edge){ edges.add(edge); }
+    public void increaseBaconNum(int baconNum){ this.baconNum = baconNum + 1; }
     public int getVertexNum(){ return vertexNum; }
+    public int getBaconNum() {return baconNum; }
     public ArrayList<Integer> getEdges(){ return edges; }
 }
 
@@ -22,6 +26,7 @@ public class Bacons{
     private static ArrayList<Vertex> network = new ArrayList<>();
     
         //want to speed this method up somehow, searching takes FOREVER
+            //could sort then use binary search to find
         private int has(int from){
             for (Vertex v : network){
                 if (v.getVertexNum() == from) return network.indexOf(v);
@@ -56,8 +61,6 @@ public class Bacons{
                 System.out.println("An error occurred please restart the program.");
                 System.exit(0);
             }
-
-            System.out.println("reads input correctly");
     
             return network;
         }
@@ -69,34 +72,32 @@ public class Bacons{
         }
 
         private int calculateBaconNumber(int start, int end){
+            //do I need to reset all bacon numbers in the vertices each time?
+
             if (start == end) return 0; //If they are the same the bacon number is 0
 
-            //Doing network.size will not work for this
             Queue<Integer> q = new LinkedList<>();
-            int[] baconNums = new int[network.size() + 1];
-            Arrays.fill(baconNums, -1);
-            boolean[] visited = new boolean[network.size() + 1];
+            Set<Integer> visited = new HashSet<>();
 
-            //initialization for BFS
-            q.offer(start);
-            baconNums[start] = 0;
-            visited[start] = true;
+            q.add(start);   //add the start vertex to the queue
+            visited.add(start); //mark it as visited
 
-            while (!q.isEmpty()){
-                int cur = q.poll();
-                int curBaconNum = baconNums[cur];
+            while (!q.isEmpty()){   //while the queue is not empty
+                int cur = q.poll(); //get the current vertex
+                int index = has(cur);   //get the index of that vertex
+                int curBaconNum = network.get(index).getBaconNum(); //get the current bacon number
 
-                Vertex v = network.get(cur);
-                for (int i : v.getEdges()){
-                    if (!visited[i]){   //if the edge has not been visited
-                        visited[i] = true;
-                        baconNums[i] = curBaconNum + 1;
-                        if (i == end) return baconNums[i];  //if you made it to the end return the bacon number
-                        q.offer(i);
+                Vertex v = network.get(index);  //get the vertex with all its attributes
+                for (int i : v.getEdges()){ //for all edges from that vertex
+                    if (!visited.contains(i)){  //if the edge is not visited
+                        visited.add(i); //mark it as visited
+                        v.increaseBaconNum(curBaconNum);    //increase the bacon number of it
+                        if (i == end) return v.getBaconNum();   //if that vertex is the end vertex then return it
+                        q.offer(i); //if not then add the vertex to the queue
                     }
                 }
             }
-            return -1;  //there was no path from start to end
+            return -1;  //if no path was found
         }        
 
         private double calculateAverageBaconNumber(int randVertex){
@@ -105,6 +106,7 @@ public class Bacons{
             for (Vertex v : network){   //for all vertices
                 int to = v.getVertexNum();
                 int baconNum = calculateBaconNumber(randVertex, to);    //calculate the bacon number to that vertex
+                System.out.println(baconNum);
                 if (baconNum != -1){
                     totalBacon += baconNum; //add it to the total
                     numVertices++;  //add one to the number of vertices
@@ -144,13 +146,13 @@ public class Bacons{
     
     
             //Below this is used for ensuring input is read in correctly
-            for (Vertex v : network){
-            System.out.print(v.getVertexNum() + ": ");
-            for (Integer i : v.getEdges()){
-                System.out.print(i + ", ");
-            }
-                System.out.println();
-            }
+            // for (Vertex v : network){
+            // System.out.print(v.getVertexNum() + ": ");
+            // for (Integer i : v.getEdges()){
+            //     System.out.print(i + ", ");
+            // }
+            //     System.out.println();
+            // }
 
             System.out.println("\n" + randVertex);
             System.out.println(averageBaconNum);
