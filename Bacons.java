@@ -110,6 +110,19 @@ public class Bacons{
         return randVertex;
     }
 
+    private static String calculateLikelihoodOfColab(int baconNum, double averageBaconNum){
+            //just print it out, call this method inside the print statement 
+            //make this a switch block???
+        //if 0 say they cannot collaborate with themselves
+        if (baconNum == 0) return "";
+        //if 1 say they have already collaborated, so the likelihood is high
+        if (baconNum == 1) return "";
+        //if between 1 and just below average (average - 1???) there is a high chance
+        //if between just below average (average - 1) and just above average (average + 1) there is a medium chance
+        //if greater than just above average (average + 1) there is a low chance
+        return "";
+    }
+
     private static void getUserInput(int randVertex, double averageBaconNum){
         System.out.println("Note that not every vertex may exist in the network, some recommend vertices will be provided each iteration that exist in the network");
 
@@ -136,7 +149,8 @@ public class Bacons{
             baconNum = calculateBaconNumber(randVertex, userVertex);    //calculate teh bacon number of the user vertex
 
             if (baconNum != -1){
-                System.out.println("The Bacon number for vertex " + userVertex + " is " + baconNum);    
+                System.out.println("The Bacon number for vertex " + userVertex + " is " + baconNum);
+                System.out.println("The likelihood of collaboration between vertex " + randVertex + " and vertex " + userVertex + " is: " + calculateLikelihoodOfColab(baconNum, averageBaconNum));
                 //add this to the output file
                 //predict the likelihood of a collaboration here, output it and add it to the outfile file
             }
@@ -149,7 +163,7 @@ public class Bacons{
             cont = in.next().equalsIgnoreCase("Y");
         }
 
-        System.out.println("Thank you for using the Modified Bacon Number Calculator!");
+        System.out.println("\nThank you for using the Modified Bacon Number Calculator!");
         in.close();
         return;
     }
