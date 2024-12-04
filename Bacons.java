@@ -1,20 +1,17 @@
 import java.util.*;
 import java.io.*;
+import java.text.DecimalFormat;
 
 class Vertex{
     private int vertexNum;  //corresponds to the vertex number from the input file
-    private int baconNum;   //the Bacon number of the vertex
     private ArrayList<Integer> edges;   //the edges of the vertex
 
     public Vertex(int vertexNum){
         this.vertexNum = vertexNum;
         this.edges = new ArrayList<>();
-        this.baconNum = -1; // Bacon number is initially undefined
     }
     public void addEdge(int edge){ edges.add(edge); }
-    public void setBaconNum(int baconNum){ this.baconNum = baconNum; }
     public int getVertexNum(){ return vertexNum; }
-    public int getBaconNum(){ return baconNum; }
     public ArrayList<Integer> getEdges(){ return edges; }
 }
 
@@ -58,7 +55,6 @@ public class Bacons{
         }
     }
 
-    // Breadth-First Search (BFS) to calculate Bacon number between start and end
     private static int calculateBaconNumber(int start, int end){
         if (start == end) return 0; //if start and end are the same, then the Bacon number is 0
 
@@ -82,34 +78,80 @@ public class Bacons{
         return -1;  //no path exists
     }
 
-    // Calculate the average Bacon number for a random vertex
     private static double calculateAverageBaconNumber(int randVertex){
-        System.out.println("Calculating the average Bacon number from vertex " + randVertex + "...");
+        System.out.println("Calculating the average Bacon number from vertex " + randVertex + ". Depending on the network size this may take a minute.");
 
         int totalBaconNumber = 0, count = 0;
 
         for (Vertex v : network.values()){  //for all vertices in the network
             if (v.getVertexNum() == randVertex) continue; //skip the random vertex itself
             int baconNum = calculateBaconNumber(randVertex, v.getVertexNum());  //calculate the Bacon number for the vertex from the random vertex
-            v.setBaconNum(baconNum);    //save the vertex's Bacon number
             if (baconNum != -1){    //if the Bacon number exists
                 totalBaconNumber += baconNum;   //add it to the running total
                 count++;    //add one to the count of vertices
             }
         }
 
-        if (count > 0) return (double) totalBaconNumber / count;    //if there is at least 1 vertex
+        if (count > 0){
+            DecimalFormat df = new DecimalFormat("#.###");
+            double averageBaconNum = (double) totalBaconNumber / count;
+            System.out.println("The average Bacon number from vertex " + randVertex + " is " + df.format(averageBaconNum) + "\n");    //add this to the output file
+            return averageBaconNum;    //if there is at least 1 vertex
+        }
         else return -1; //otherwise return -1, no vertices are neighbors with randVertex
         
     }
 
-    // Select a random vertex from the network
     private static int selectRandomVertex(){
         Random random = new Random();
         List<Integer> keys = new ArrayList<>(network.keySet());
         int randVertex = keys.get(random.nextInt(keys.size()));
         while (!network.containsKey(randVertex)) randVertex = keys.get(random.nextInt(keys.size()));
         return randVertex;
+    }
+
+    private static void getUserInput(int randVertex, double averageBaconNum){
+        System.out.println("Note that not every vertex may exist in the network, some recommend vertices will be provided each iteration that exist in the network");
+
+        boolean cont = true;
+        Scanner in = new Scanner(System.in);
+        int userVertex, baconNum;
+
+        while(cont){    //while the user wants to keep going
+            System.out.print("\nSome recommended vertices would be: ");
+            for (int i = 0; i < 5; i++){
+                if (i < 3) System.out.print(selectRandomVertex() + ", ");
+                else if (i == 3) System.out.print(selectRandomVertex() + ", or ");
+                else System.out.println(selectRandomVertex());
+            }
+
+            System.out.print("Enter a vertex: ");
+            userVertex = in.nextInt();  //get the user vertex
+
+            if (!network.containsKey(userVertex)){  //ensure the user vertex is in the network
+                System.out.println("The network does not contain that vertex, please try a different vertex");
+                continue;
+            }
+
+            baconNum = calculateBaconNumber(randVertex, userVertex);    //calculate teh bacon number of the user vertex
+
+            if (baconNum != -1){
+                System.out.println("The Bacon number for vertex " + userVertex + " is " + baconNum);    
+                //add this to the output file
+                //predict the likelihood of a collaboration here, output it and add it to the outfile file
+            }
+            else{
+                System.out.println("No path exists between the Bacon vertex (" + randVertex + ") and your selected vertex (" + userVertex + "), please try again");
+                continue;
+            }
+
+            System.out.print("Would you like to try another vertex (press Y to continue): ");
+            cont = in.next().equalsIgnoreCase("Y");
+        }
+
+        System.out.println("Thank you for using the Modified Bacon Number Calculator!");
+        in.close();
+        return;
     }
 
     public static void main(String[] args){
@@ -119,16 +161,12 @@ public class Bacons{
         System.out.println("The randomly selected vertex which is used as the Bacon vertex is " + randVertex);
 
         double averageBaconNum = calculateAverageBaconNumber(randVertex);   //calculates the average bacon number from the Bacon vertex
-        System.out.println("The average Bacon number from vertex " + randVertex + " is " + averageBaconNum);    //add this to the output file
-
-        //while the user wishes to continue
-            //get a vertex from them (confirm it is in the network)
-            //get the bacon number for that vertex (see what is saved and recalculate it check if they match)
-            //add the information to the output file
-            //ask if they wish to continue, update the while loop condition
 
         //output the final file
-        //thank the user
+
+        getUserInput(randVertex, averageBaconNum);   //take all user input, add it to the output file
+
+        //output the output file
 
         //prints out the network, used for testing
         // for (Vertex v : network.values()){
@@ -143,33 +181,5 @@ public class Bacons{
         //         System.out.println(); // New line after printing all edges
         //     }
         // }
-
-        // Scanner scanner = new Scanner(System.in);
-        // boolean cont = true;
-
-        // // Main interaction loop
-        // while (cont){
-        //     System.out.print("Enter a vertex number: ");
-        //     int userVertex = scanner.nextInt();
-
-        //     if (!network.containsKey(userVertex)){
-        //         System.out.println("Vertex not found. Please try again.");
-        //         continue;
-        //     }
-
-        //     // Assume vertex 1 is the "Kevin Bacon" vertex
-        //     int baconNum = calculateBaconNumber(1, userVertex);
-        //     System.out.println("Bacon number for vertex " + userVertex + ": " + baconNum);
-
-        //     double avgBaconNum = calculateAverageBaconNumber(userVertex);
-        //     System.out.println("Average Bacon number for vertex " + userVertex + ": " + avgBaconNum);
-
-        //     System.out.print("Do you want to continue? (y/n): ");
-        //     String response = scanner.next();
-        //     cont = response.equalsIgnoreCase("y");
-        // }
-
-        // scanner.close();
-        // System.out.println("Thank you for using the Bacon Number Calculator!");
     }
 }
