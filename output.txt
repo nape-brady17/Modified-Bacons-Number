@@ -1,0 +1,6 @@
+The randomly selected vertex which is used as the Bacon vertex is 46153
+The average Bacon number from vertex 46153 is 5.741
+
+The Bacon number for vertex 119395 is: 5
+	The likelihood of collaboration between vertex 46153 and vertex 119395 is: High
+
