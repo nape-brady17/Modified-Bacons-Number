@@ -40,7 +40,6 @@ public class Bacons{
                 from = Integer.parseInt(parts[0]);  //the first integer is the from vertex
                 to = Integer.parseInt(parts[1]);    //the second integer is the to vertex
 
-                //handle the original direction (from --> to)
                 Vertex v = network.get(from);   //get the from vertex from the network
                 if (v != null) v.addEdge(to);   //it it's in the network, add the edge
                 else{   //if it's not in the network
@@ -48,15 +47,8 @@ public class Bacons{
                     v.addEdge(to);  //add the edge
                     network.put(from, v);   //put that vertex in the network
                 }
-                
-                //handle the reverse direction (to --> from) since graph is undirected
-                Vertex reverseV = network.get(to); //get the to vertex from the network
-                if (reverseV != null) reverseV.addEdge(from);   //if it's in the network, add the edge
-                else{   //if it's not in the network
-                    reverseV = new Vertex(to);  //create a new to vertex
-                    reverseV.addEdge(from); //add the edge
-                    network.put(to, reverseV);  //put that vertex in the network
-                }
+
+                if (!network.containsKey(to)) network.put(to, new Vertex(to));  //ensure the to vertex is in the network
             }
             in.close();
         } catch (Exception e){  //something went wrong, end the program
