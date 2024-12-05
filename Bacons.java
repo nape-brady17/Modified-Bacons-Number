@@ -1,8 +1,10 @@
+//This program was written by Brady Napier for COP 5537- Final Project
+
 import java.util.*;
 import java.io.*;
 import java.text.*;
 
-class Vertex{
+class Vertex{   //stores each vertex for the graph/network
     private int vertexNum;  //corresponds to the vertex number from the input file
     private ArrayList<Integer> edges;   //the edges of the vertex
 
@@ -19,7 +21,7 @@ public class Bacons{
     private static Map<Integer, Vertex> network = new HashMap<>();
     private static File outputFile = new File("output.txt");
 
-    private static void readInput(String[] args){
+    private static void readInput(String[] args){   //reads the graph/network and saves it
         if (args.length < 1){  //make sure the input file name is passed in as a command line argument
             System.out.println("Please provide the input file as an argument.");
             System.exit(0);
@@ -56,7 +58,7 @@ public class Bacons{
         }
     }
 
-    private static int calculateBaconNumber(int start, int end){
+    private static int calculateBaconNumber(int start, int end){    //calculates the Bacon number between 2 vertices (this is a modified BFS)
         if (start == end) return 0; //if start and end are the same, then the Bacon number is 0
 
         Map<Integer, Integer> distances = new HashMap<>();
@@ -79,7 +81,7 @@ public class Bacons{
         return -1;  //no path exists
     }
 
-    private static double calculateAverageBaconNumber(int randVertex){
+    private static double calculateAverageBaconNumber(int randVertex){  //calculates the average Bacon number from a single vertex by finding the Bacon number to every other vertex in the graph/network
         System.out.println("Calculating the average Bacon number from vertex " + randVertex + ". Depending on the network size this may take a minute.");
 
         int totalBaconNumber = 0, count = 0;
@@ -104,7 +106,7 @@ public class Bacons{
         
     }
 
-    private static int selectRandomVertex(){
+    private static int selectRandomVertex(){    //selects a random vertex and confirms that it is in the graph/network
         Random random = new Random();
         List<Integer> keys = new ArrayList<>(network.keySet());
         int randVertex = keys.get(random.nextInt(keys.size()));
@@ -112,7 +114,7 @@ public class Bacons{
         return randVertex;
     }
 
-    private static String calculateLikelihoodOfCollab(int baconNum, double averageBaconNum){
+    private static String calculateLikelihoodOfCollab(int baconNum, double averageBaconNum){    //calculates the likelihood of a collaboration based on the average Bacon number and Bacon number of the user vertex
         if (baconNum == 0) return "Guaranteed (collaborate with yourself on everything)";   //user vertex is the same as the bacon vertex
         if (baconNum == 1) return "Very high (already collaborated before)";    //the two authors have already collaborated
         if (baconNum > 1 && baconNum < (averageBaconNum - 0.5)) return "High"; //high chance, the bacon number is less than the average
@@ -120,7 +122,7 @@ public class Bacons{
         else return "Low";  //low chance, the bacon number is higher than the average
     }
 
-    private static void getUserInput(int randVertex, double averageBaconNum){
+    private static void getUserInput(int randVertex, double averageBaconNum){   //gets all user input for all vertices they want to test, outputs necessary information
         System.out.println("Note that not every vertex may exist in the network, some recommend vertices will be provided each iteration that exist in the network");
 
         boolean cont = true;
@@ -176,7 +178,7 @@ public class Bacons{
         return;
     }
 
-    private static void writeToFile(String str){
+    private static void writeToFile(String str){    //writes the string passed in to the output file
         try{
             FileWriter fw = new FileWriter(outputFile, true);   //open the file in append mode
             BufferedWriter bw = new BufferedWriter(fw);
@@ -191,10 +193,10 @@ public class Bacons{
         return;
     }
 
-    private static void clearOutputFile(){
+    private static void clearOutputFile(){  //clears the output file to ensure it is blank each time the program is run
         try{
-            outputFile.delete();
-            outputFile.createNewFile();
+            outputFile.delete();    //delete the old output.txt
+            outputFile.createNewFile(); //create a new output.txt that is blank to write to
         } catch (Exception e){
             System.out.println("An error occurred while clearing the output file, please restart the program");
             System.exit(0);
@@ -209,7 +211,7 @@ public class Bacons{
         System.out.println("The randomly selected vertex which is used as the Bacon vertex is " + randVertex);
         writeToFile("The randomly selected vertex which is used as the Bacon vertex is " + randVertex);
 
-        double averageBaconNum = calculateAverageBaconNumber(randVertex);   //calculates the average bacon number from the Bacon vertex
+        double averageBaconNum = calculateAverageBaconNumber(randVertex);   //calculates the average bacon number from the Bacon vertex, adds it to the output file
 
         getUserInput(randVertex, averageBaconNum);   //take all user input, add it to the output file
     }
