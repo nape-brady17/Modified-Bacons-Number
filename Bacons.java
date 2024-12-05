@@ -111,18 +111,11 @@ public class Bacons{
     }
 
     private static String calculateLikelihoodOfCollab(int baconNum, double averageBaconNum){
-            //make this a switch block
-            //change 0.5 to see what the best value would be
-        //if 0 say they cannot collaborate with themselves
-        if (baconNum == 0) return "Guaranteed (collaborate on yourself with everything)";
-        //if 1 say they have already collaborated, so the likelihood is high
-        if (baconNum == 1) return "Very high (already collaborated before)";
-        //if between 1 and just below average (average - 1???) there is a high chance
-        if (baconNum > 1 && baconNum < (averageBaconNum - 0.5)) return "High";
-        //if between just below average (average - 1) and just above average (average + 1) there is a medium chance
-        if (baconNum > (averageBaconNum - 0.5) && baconNum < (averageBaconNum + 0.5)) return "Medium";
-        //if greater than just above average (average + 1) there is a low chance
-        return "Low";
+        if (baconNum == 0) return "Guaranteed (collaborate with yourself on everything)";   //user vertex is the same as the bacon vertex
+        if (baconNum == 1) return "Very high (already collaborated before)";    //the two authors have already collaborated
+        if (baconNum > 1 && baconNum < (averageBaconNum - 0.5)) return "High"; //high chance, the bacon number is less than the average
+        else if (baconNum > (averageBaconNum - 0.5) && baconNum < (averageBaconNum + 0.5)) return "Medium"; //medium chance, the bacon number is right around the average
+        else return "Low";  //low chance, the bacon number is higher than the average
     }
 
     private static void getUserInput(int randVertex, double averageBaconNum){
@@ -132,37 +125,41 @@ public class Bacons{
         Scanner in = new Scanner(System.in);
         int userVertex, baconNum;
 
-        while(cont){    //while the user wants to keep going
-            System.out.print("\nSome recommended vertices would be: ");
-            for (int i = 0; i < 5; i++){
-                if (i < 3) System.out.print(selectRandomVertex() + ", ");
-                else if (i == 3) System.out.print(selectRandomVertex() + ", or ");
-                else System.out.println(selectRandomVertex());
+        try{
+            while (cont){    //while the user wants to keep going
+                System.out.print("\nSome recommended vertices would be: ");
+                for (int i = 0; i < 5; i++){
+                    if (i < 3) System.out.print(selectRandomVertex() + ", ");
+                    else if (i == 3) System.out.print(selectRandomVertex() + ", or ");
+                    else System.out.println(selectRandomVertex());
+                }
+
+                System.out.print("Enter a vertex: ");
+                userVertex = in.nextInt();  //get the user vertex
+
+                if (!network.containsKey(userVertex)){  //ensure the user vertex is in the network
+                    System.out.println("The network does not contain that vertex, please try a different vertex");
+                    continue;
+                }
+
+                baconNum = calculateBaconNumber(randVertex, userVertex);    //calculate the bacon number of the user vertex
+
+                if (baconNum != -1){
+                    System.out.println("The Bacon number for vertex " + userVertex + " is " + baconNum);
+                    System.out.println("The likelihood of collaboration between vertex " + randVertex + " and vertex " + userVertex + " is: " + calculateLikelihoodOfCollab(baconNum, averageBaconNum));
+                    //add this to the output file
+                }
+                else{
+                    System.out.println("No path exists between the Bacon vertex (" + randVertex + ") and your selected vertex (" + userVertex + "), please try again");
+                    continue;
+                }
+
+                System.out.print("Would you like to try another vertex (press y to continue): ");
+                cont = in.next().equalsIgnoreCase("Y");
             }
-
-            System.out.print("Enter a vertex: ");
-            userVertex = in.nextInt();  //get the user vertex
-
-            if (!network.containsKey(userVertex)){  //ensure the user vertex is in the network
-                System.out.println("The network does not contain that vertex, please try a different vertex");
-                continue;
-            }
-
-            baconNum = calculateBaconNumber(randVertex, userVertex);    //calculate the bacon number of the user vertex
-
-            if (baconNum != -1){
-                System.out.println("The Bacon number for vertex " + userVertex + " is " + baconNum);
-                System.out.println("The likelihood of collaboration between vertex " + randVertex + " and vertex " + userVertex + " is: " + calculateLikelihoodOfCollab(baconNum, averageBaconNum));
-                //add this to the output file
-                //predict the likelihood of a collaboration here, output it and add it to the outfile file
-            }
-            else{
-                System.out.println("No path exists between the Bacon vertex (" + randVertex + ") and your selected vertex (" + userVertex + "), please try again");
-                continue;
-            }
-
-            System.out.print("Would you like to try another vertex (press Y to continue): ");
-            cont = in.next().equalsIgnoreCase("Y");
+        } catch (Exception e){
+            System.out.println("An unexpected error occurred, please restart the program.");
+            System.exit(0);
         }
 
         System.out.println("\nThank you for using the Modified Bacon Number Calculator!");
