@@ -110,7 +110,7 @@ public class Bacons{
         return randVertex;
     }
 
-    private static String calculateLikelihoodOfColab(int baconNum, double averageBaconNum){
+    private static String calculateLikelihoodOfCollab(int baconNum, double averageBaconNum){
             //make this a switch block
             //change 0.5 to see what the best value would be
         //if 0 say they cannot collaborate with themselves
@@ -152,7 +152,7 @@ public class Bacons{
 
             if (baconNum != -1){
                 System.out.println("The Bacon number for vertex " + userVertex + " is " + baconNum);
-                System.out.println("The likelihood of collaboration between vertex " + randVertex + " and vertex " + userVertex + " is: " + calculateLikelihoodOfColab(baconNum, averageBaconNum));
+                System.out.println("The likelihood of collaboration between vertex " + randVertex + " and vertex " + userVertex + " is: " + calculateLikelihoodOfCollab(baconNum, averageBaconNum));
                 //add this to the output file
                 //predict the likelihood of a collaboration here, output it and add it to the outfile file
             }
