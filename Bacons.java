@@ -118,7 +118,7 @@ public class Bacons{
         if (baconNum == 0) return "Guaranteed (collaborate with yourself on everything)";   //user vertex is the same as the bacon vertex
         if (baconNum == 1) return "Very high (already collaborated before)";    //the two authors have already collaborated
         if (baconNum > 1 && baconNum < (averageBaconNum - 0.5)) return "High"; //high chance, the bacon number is less than the average
-        else if (baconNum > (averageBaconNum - 0.5) && baconNum < (averageBaconNum + 0.5)) return "Medium"; //medium chance, the bacon number is right around the average
+        else if (baconNum >= (averageBaconNum - 0.5) && baconNum <= (averageBaconNum + 0.5)) return "Medium"; //medium chance, the bacon number is right around the average
         else return "Low";  //low chance, the bacon number is higher than the average
     }
 
