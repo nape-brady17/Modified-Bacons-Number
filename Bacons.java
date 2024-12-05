@@ -111,16 +111,18 @@ public class Bacons{
     }
 
     private static String calculateLikelihoodOfColab(int baconNum, double averageBaconNum){
-            //just print it out, call this method inside the print statement 
-            //make this a switch block???
+            //make this a switch block
+            //change 0.5 to see what the best value would be
         //if 0 say they cannot collaborate with themselves
-        if (baconNum == 0) return "";
+        if (baconNum == 0) return "Guaranteed (collaborate on yourself with everything)";
         //if 1 say they have already collaborated, so the likelihood is high
-        if (baconNum == 1) return "";
+        if (baconNum == 1) return "Very high (already collaborated before)";
         //if between 1 and just below average (average - 1???) there is a high chance
+        if (baconNum > 1 && baconNum < (averageBaconNum - 0.5)) return "High";
         //if between just below average (average - 1) and just above average (average + 1) there is a medium chance
+        if (baconNum > (averageBaconNum - 0.5) && baconNum < (averageBaconNum + 0.5)) return "Medium";
         //if greater than just above average (average + 1) there is a low chance
-        return "";
+        return "Low";
     }
 
     private static void getUserInput(int randVertex, double averageBaconNum){
@@ -146,7 +148,7 @@ public class Bacons{
                 continue;
             }
 
-            baconNum = calculateBaconNumber(randVertex, userVertex);    //calculate teh bacon number of the user vertex
+            baconNum = calculateBaconNumber(randVertex, userVertex);    //calculate the bacon number of the user vertex
 
             if (baconNum != -1){
                 System.out.println("The Bacon number for vertex " + userVertex + " is " + baconNum);
