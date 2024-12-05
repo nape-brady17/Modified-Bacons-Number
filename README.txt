@@ -6,7 +6,7 @@ at random and the average "Bacon number" for this vertex is found. The user then
 Using the average "Bacon number" from the randomly selected vertex and the "Bacon number" of the user selected vertex the likelihood of 
 collaboration is calculated.
 
-To run the program ensure that all files are located in the current working directory, then run:
+To compile and run the program ensure that all files are located in the current working directory, then run:
     javac Bacons.java
     javac Bacons inputFileName
 
