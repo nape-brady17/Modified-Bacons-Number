@@ -1,15 +1,18 @@
-The randomly selected vertex which is used as the Bacon vertex is 94012
-The average Bacon number from vertex 94012 is 6.369
+The randomly selected vertex which is used as the Bacon vertex is 7154
+The average Bacon number from vertex 7154 is 4.948
 
-The Bacon number for vertex 100618 is: 6
-	The likelihood of collaboration between vertex 94012 and vertex 100618 is: Medium
+The Bacon number for vertex 19140 is: 5
+	The likelihood of collaboration between vertex 7154 and vertex 19140 is: Medium
 
-The Bacon number for vertex 97232 is: 7
-	The likelihood of collaboration between vertex 94012 and vertex 97232 is: Low
+The Bacon number for vertex 24280 is: 4
+	The likelihood of collaboration between vertex 7154 and vertex 24280 is: High
 
-The Bacon number for vertex 2804 is: 7
-	The likelihood of collaboration between vertex 94012 and vertex 2804 is: Low
+The Bacon number for vertex 2404 is: 5
+	The likelihood of collaboration between vertex 7154 and vertex 2404 is: Medium
 
-The Bacon number for vertex 68106 is: 1
-	The likelihood of collaboration between vertex 94012 and vertex 68106 is: Very high (already collaborated before)
+The Bacon number for vertex 24280 is: 4
+	The likelihood of collaboration between vertex 7154 and vertex 24280 is: High
+
+The Bacon number for vertex 11472 is: 4
+	The likelihood of collaboration between vertex 7154 and vertex 11472 is: High
 
